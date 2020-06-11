@@ -13,6 +13,12 @@ export const Container = styled.div`
     flex-direction: column;
 
     margin: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        opacity: 0.5;
+    }
 `
 
 
@@ -24,7 +30,7 @@ export const TopCard = styled.div`
 `
 
 export const BottomCard = styled.div`
-    width: 100%;
+    width: 120%;
     display: flex;
     justify-content: space-around;
 

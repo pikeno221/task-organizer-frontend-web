@@ -8,7 +8,7 @@ function TaskCard() {
         <S.Container>
             <S.TopCard>
                 <img src={defaultIcon} alt="Task Icon" />
-                <h3>Task Tittle</h3>
+                <h3>Task Title</h3>
             </S.TopCard>
             <S.BottomCard>
                 <strong>17/10/2020</strong>
