@@ -12,6 +12,7 @@ import TaskCard from '../../components/TaskCard'
 function Home() {
   const [filterActived, setFilterActived] = useState('today');
   const [tasks, setTasks] = useState([]);
+  const [lateCount, setLateCount] = useState();
 
   async function loadTasks() {
     await api.get(`/tasks/${filterActived}`, {
@@ -28,13 +29,35 @@ function Home() {
       })
   }
 
+  async function overdueVerify() {
+    await api.get(`/tasks/overdue`, {
+      headers: {
+        macaddress: 1234
+      }
+    })
+      .then(response => {
+        setLateCount(response.data.length);
+        console.log(response.data.length);
+      })
+      .catch(error => {
+        console.error(error);
+      })
+  }
+
+  function Notification() {
+    setFilterActived('overdue');
+  }
+
+  
+
   useEffect(() => {
     loadTasks();
+    overdueVerify();
   }, [filterActived])
 
   return (
     <S.Container>
-      <Header />
+      <Header lateCount={lateCount} clickNotification={Notification} />
 
       <S.FilterArea>
         <button type="button" onClick={() => setFilterActived("all")}>
@@ -56,7 +79,7 @@ function Home() {
       </S.FilterArea>
 
       <S.Title>
-        <h3>TAREFAS</h3>
+        <h3>{filterActived == 'overdue' ? 'TAREFAS ATRASADAS' : 'TAREFAS'}</h3>
       </S.Title>
 
       <S.Content>
