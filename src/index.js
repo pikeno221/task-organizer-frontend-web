@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Home from './views/Home';
+
+import Home from './views/Home';  
+import TaskDetails from './views/TaskDetails';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Home />
+    <TaskDetails />
   </React.StrictMode>,
   document.getElementById('root')
 );
