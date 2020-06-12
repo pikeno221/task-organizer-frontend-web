@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import * as S from './styles';
 
 import api from '../../services/api';
@@ -48,7 +49,7 @@ function Home() {
     setFilterActived('overdue');
   }
 
-  
+
 
   useEffect(() => {
     loadTasks();
@@ -85,7 +86,10 @@ function Home() {
       <S.Content>
         {
           tasks.map(t => (
-            <TaskCard category={t.category} title={t.title} when={t.when} />
+            <Link to={`/tasks/${t._id}`} >
+              <TaskCard category={t.category} title={t.title} when={t.when} done={t.done} />
+            </Link>
+
           ))
         }
       </S.Content>

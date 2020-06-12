@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import * as S from './styles';
+import { format } from 'date-fns';
 
 import api from '../../services/api';
 
@@ -11,7 +13,8 @@ import CategoryIcons from '../../utils/categoryIcons';
 import iconCalendar from '../../assets/calendar.png'
 import iconClock from '../../assets/clock.png'
 
-function TaskDetails() {
+function TaskDetails({ match }) {
+    const [redirect, setRedirect] = useState(false);
     const [lateCount, setLateCount] = useState();
     const [category, setCategory] = useState();
     const [id, setId] = useState();
@@ -38,24 +41,64 @@ function TaskDetails() {
             })
     }
 
+    async function loadTaskDetails() {
+        await api.get(`/tasks/${match.params.id}`)
+            .then(response => {
+                setCategory(response.data.category)
+                setTitle(response.data.title)
+                setDone(response.data.done)
+                setDescription(response.data.description)
+                setDate(format(new Date(response.data.when), 'yyyy-MM-dd'))
+                setHour(format(new Date(response.data.when), 'HH:mm'))
+            })
+    }
+
     async function Save() {
-        await api.post('/tasks', {
-            macaddress,
-            category,
-            title,
-            description,
-            when: `${date}T${hour}.000`,
-            done
-        }).then(() => alert('TASK CREATED!')
-        )
+
+        if (!title) {
+            return alert("You must need to input title");
+        } else if (!description) {
+            return alert("You must need to input description");
+        } else if (!category) {
+            return alert("You must need to input category");
+        } else if (!date) {
+            return alert("You must need to input date");
+        } else if (!hour) {
+            return alert("You must need to input hour");
+        }
+
+        if (match.params.id) {
+            await api.put(`/tasks/${match.params.id}`, {
+                macaddress,
+                category,
+                title,
+                description,
+                when: `${date}T${hour}:00.000`,
+                done
+            }).then(() => setRedirect(true))
+
+        } else {
+
+
+            await api.post('/tasks', {
+                macaddress,
+                category,
+                title,
+                description,
+                when: `${date}T${hour}:00.000`,
+                done
+            }).then(() => setRedirect(true))
+        }
     }
 
     useEffect(() => {
         overdueVerify();
+        loadTaskDetails();
     }, [])
 
     return (
         <S.Container>
+            {redirect && <Redirect to="/" />}
             <Header lateCount={lateCount} />
 
             <S.Form>
