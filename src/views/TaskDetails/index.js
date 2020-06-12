@@ -14,6 +14,13 @@ import iconClock from '../../assets/clock.png'
 function TaskDetails() {
     const [lateCount, setLateCount] = useState();
     const [category, setCategory] = useState();
+    const [id, setId] = useState();
+    const [done, setDone] = useState(false);
+    const [title, setTitle] = useState()
+    const [description, setDescription] = useState();
+    const [date, setDate] = useState();
+    const [hour, setHour] = useState();
+    const [macaddress, setMacaddress] = useState('1234');
 
 
     async function overdueVerify() {
@@ -29,6 +36,18 @@ function TaskDetails() {
             .catch(error => {
                 console.error(error);
             })
+    }
+
+    async function Save() {
+        await api.post('/tasks', {
+            macaddress,
+            category,
+            title,
+            description,
+            when: `${date}T${hour}.000`,
+            done
+        }).then(() => alert('TASK CREATED!')
+        )
     }
 
     useEffect(() => {
@@ -54,36 +73,41 @@ function TaskDetails() {
 
                 <S.Input>
                     <span> Title </span>
-                    <input type="text" placeholder="Task title"></input>
+                    <input type="text" placeholder="Task title"
+                        onChange={e => setTitle(e.target.value)} value={title} />
                 </S.Input>
 
                 <S.TextArea>
-                    <span> Title </span>
-                    <textarea rows={5} placeholder="Details of task"></textarea>
+                    <span> Description </span>
+                    <textarea rows={5} placeholder="Details of task"
+                        onChange={e => setDescription(e.target.value)} value={description} />
+
                 </S.TextArea>
 
                 <S.Input>
                     <span> Date </span>
-                    <input type="date"></input>
+                    <input type="date"
+                        onChange={e => setDate(e.target.value)} value={date} />
                     <img src={iconCalendar} alt="Calendar"></img>
                 </S.Input>
 
                 <S.Input>
-                    <span> Hour </span>
-                    <input type="time"></input>
+                    <span> hora </span>
+                    <input type="time"
+                        onChange={e => setHour(e.target.value)} value={hour} />
                     <img src={iconClock} alt="clock"></img>
                 </S.Input>
 
                 <S.Options>
                     <div>
-                        <input type="checkbox" />
-                        <span>DONE</span>
+                        <input type="checkbox" checked={done} onChange={() => setDone(!done)} />
+                        <span>DONE </span>
                     </div>
                     <button type="button">DELETE</button>
                 </S.Options>
 
                 <S.Save>
-                    <button type="button">SAVE</button>
+                    <button type="button" onClick={Save}>SAVE</button>
                 </S.Save>
             </S.Form>
 
