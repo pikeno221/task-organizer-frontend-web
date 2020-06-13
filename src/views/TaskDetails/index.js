@@ -91,6 +91,17 @@ function TaskDetails({ match }) {
         }
     }
 
+    async function Remove() {
+        const res = window.confirm('Do you really want to remove this task?');
+
+        if(res == true)  {
+            await api.delete(`/tasks/${match.params.id}`)
+            .then(() => setRedirect(true))
+        }
+            alert('ok, task removed.');
+            
+    }
+
     useEffect(() => {
         overdueVerify();
         loadTaskDetails();
@@ -146,12 +157,13 @@ function TaskDetails({ match }) {
                         <input type="checkbox" checked={done} onChange={() => setDone(!done)} />
                         <span>DONE </span>
                     </div>
-                    <button type="button">DELETE</button>
+                { match.params.id && <button type="button" onClick={Remove}>DELETE</button> }
                 </S.Options>
 
                 <S.Save>
                     <button type="button" onClick={Save}>SAVE</button>
                 </S.Save>
+
             </S.Form>
 
             <Footer />
@@ -160,4 +172,3 @@ function TaskDetails({ match }) {
 }
 
 export default TaskDetails;
-

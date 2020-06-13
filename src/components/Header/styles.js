@@ -19,6 +19,7 @@ export const LeftSide = styled.div`
   img {
     width: 100px;
     height: 40px;
+    cursor: pointer;
   }
  
 `
